@@ -1,16 +1,12 @@
 package com.github.zhangkaitao.shiro.chapter11.realm;
 
-import com.github.zhangkaitao.shiro.chapter11.BaseTest;
-import junit.framework.Assert;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.LockedAccountException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.mgt.RealmSecurityManager;
-import org.apache.shiro.subject.Subject;
-import org.junit.Before;
 import org.junit.Test;
+
+import com.github.zhangkaitao.shiro.chapter11.BaseTest;
+import com.github.zhangkaitao.shiro.chapter11.entity.User;
+import com.github.zhangkaitao.shiro.chapter11.token.ObjectToken;
 
 /**
  * <p>User: Zhang Kaitao
@@ -37,10 +33,9 @@ public class UserRealmTest extends BaseTest {
         RealmSecurityManager securityManager = (RealmSecurityManager) SecurityUtils.getSecurityManager();
         UserRealm userRealm = (UserRealm) securityManager.getRealms().iterator().next();
         userRealm.clearCachedAuthenticationInfo(subject().getPrincipals());
-
+        User user = (User) SecurityUtils.getSubject().getPrincipal();
+        System.out.println(user);
         login(u1.getUsername(), password + "1");
-
-
     }
 
     @Test

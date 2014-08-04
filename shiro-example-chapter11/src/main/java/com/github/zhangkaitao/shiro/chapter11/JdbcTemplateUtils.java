@@ -22,10 +22,10 @@ public class JdbcTemplateUtils {
     private static JdbcTemplate createJdbcTemplate() {
 
         DruidDataSource ds = new DruidDataSource();
-        ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUrl("jdbc:mysql://localhost:3306/shiro");
-        ds.setUsername("root");
-        ds.setPassword("");
+        ds.setDriverClassName("oracle.jdbc.driver.OracleDriver");
+        ds.setUrl("jdbc:oracle:thin:@127.0.0.1:1521:orcl");
+        ds.setUsername("jzcd");
+        ds.setPassword("jzcd001");
 
         return new JdbcTemplate(ds);
     }

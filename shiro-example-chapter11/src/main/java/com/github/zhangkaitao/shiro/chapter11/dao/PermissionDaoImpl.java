@@ -20,7 +20,7 @@ public class PermissionDaoImpl implements PermissionDao {
     private JdbcTemplate jdbcTemplate = JdbcTemplateUtils.jdbcTemplate();
 
     public Permission createPermission(final Permission permission) {
-        final String sql = "insert into sys_permissions(permission, description, available) values(?,?,?)";
+        final String sql = "insert into sys_permissions(id,permission, description, available) values(seq_testshiro.nextval,?,?,?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {

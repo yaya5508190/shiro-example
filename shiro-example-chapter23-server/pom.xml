@@ -6,6 +6,7 @@
         <artifactId>shiro-example-chapter23-pom</artifactId>
         <groupId>com.github.zhangkaitao</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../shiro-example-chapter23-pom</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

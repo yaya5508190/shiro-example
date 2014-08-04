@@ -32,6 +32,7 @@ public class CodecAndCryptoTest {
         String str = "hello";
         String base64Encoded = Base64.encodeToString(str.getBytes());
         String str2 = Base64.decodeToString(base64Encoded);
+        System.out.println(base64Encoded);
         Assert.assertEquals(str, str2);
 
     }
@@ -41,6 +42,7 @@ public class CodecAndCryptoTest {
         String str = "hello";
         String base64Encoded = Hex.encodeToString(str.getBytes());
         String str2 = new String(Hex.decode(base64Encoded.getBytes()));
+        System.out.println(base64Encoded);
         Assert.assertEquals(str, str2);
 
     }
@@ -50,6 +52,7 @@ public class CodecAndCryptoTest {
         String str = "hello";
         byte[] bytes = CodecSupport.toBytes(str, "utf-8");
         String str2 = CodecSupport.toString(bytes, "utf-8");
+        System.out.println(str2);
         Assert.assertEquals(str, str2);
     }
 
@@ -121,22 +124,28 @@ public class CodecAndCryptoTest {
     }
 
 
+    //hashService的设置 会被HashRequest的设置覆盖
+	@Test
+	public void testHashService() {
+		DefaultHashService hashService = new DefaultHashService(); // 默认算法SHA-512
+		hashService.setHashAlgorithmName("SHA-512");
+		hashService.setPrivateSalt(new SimpleByteSource("123")); // 私盐，默认无
+		hashService.setGeneratePublicSalt(true);// 是否生成公盐，默认false
+		hashService.setRandomNumberGenerator(new SecureRandomNumberGenerator());// 用于生成公盐。默认就这个
+		hashService.setHashIterations(1); // 生成Hash值的迭代次数
 
-    @Test
-    public void testHashService() {
-        DefaultHashService hashService = new DefaultHashService(); //默认算法SHA-512
-        hashService.setHashAlgorithmName("SHA-512");
-        hashService.setPrivateSalt(new SimpleByteSource("123")); //私盐，默认无
-        hashService.setGeneratePublicSalt(true);//是否生成公盐，默认false
-        hashService.setRandomNumberGenerator(new SecureRandomNumberGenerator());//用于生成公盐。默认就这个
-        hashService.setHashIterations(1); //生成Hash值的迭代次数
+		HashRequest request = new HashRequest.Builder().setAlgorithmName("MD5")
+				.setSource(ByteSource.Util.bytes("hello"))
+				.setSalt(ByteSource.Util.bytes("123")).setIterations(2).build();
 
-        HashRequest request = new HashRequest.Builder()
-                .setAlgorithmName("MD5").setSource(ByteSource.Util.bytes("hello"))
-                .setSalt(ByteSource.Util.bytes("123")).setIterations(2).build();
-        String hex = hashService.computeHash(request).toHex();
-        System.out.println(hex);
-    }
+		HashRequest request1 = new HashRequest.Builder()
+				.setSource(ByteSource.Util.bytes("hello"))
+				.setIterations(2).build();
+		String hex = hashService.computeHash(request).toHex();
+		String hex1 = hashService.computeHash(request1).toHex();
+		System.out.println(hex);
+		System.out.println(hex1);
+	}
 
 
     @Test
@@ -153,7 +162,6 @@ public class CodecAndCryptoTest {
         String encrptText = aesCipherService.encrypt(text.getBytes(), key.getEncoded()).toHex();
         //解密
         String text2 = new String(aesCipherService.decrypt(Hex.decode(encrptText), key.getEncoded()).getBytes());
-
         Assert.assertEquals(text, text2);
     }
 

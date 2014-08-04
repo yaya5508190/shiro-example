@@ -32,7 +32,7 @@ public class MyRealm extends AuthorizingRealm {
 
         return new SimpleAuthenticationInfo(
                 "wu",
-                passwordService.encryptPassword("123"),
+                passwordService.encryptPassword("123333"),
                 getName());
     }
 }

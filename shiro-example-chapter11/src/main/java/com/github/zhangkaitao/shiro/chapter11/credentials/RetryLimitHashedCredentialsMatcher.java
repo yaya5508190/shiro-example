@@ -8,6 +8,8 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 
+import com.github.zhangkaitao.shiro.chapter11.entity.User;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,11 +28,11 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
 
     @Override
     public boolean doCredentialsMatch(AuthenticationToken token, AuthenticationInfo info) {
-        String username = (String)token.getPrincipal();
+    	Object key = token.getPrincipal();
         //retry count + 1
-        Element element = passwordRetryCache.get(username);
+        Element element = passwordRetryCache.get(key);
         if(element == null) {
-            element = new Element(username , new AtomicInteger(0));
+            element = new Element(key , new AtomicInteger(0));
             passwordRetryCache.put(element);
         }
         AtomicInteger retryCount = (AtomicInteger)element.getObjectValue();
@@ -42,7 +44,7 @@ public class RetryLimitHashedCredentialsMatcher extends HashedCredentialsMatcher
         boolean matches = super.doCredentialsMatch(token, info);
         if(matches) {
             //clear retry count
-            passwordRetryCache.remove(username);
+            passwordRetryCache.remove(key);
         }
         return matches;
     }

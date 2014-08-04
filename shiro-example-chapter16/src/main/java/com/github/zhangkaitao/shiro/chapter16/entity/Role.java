@@ -19,6 +19,7 @@ public class Role implements Serializable {
     private List<Long> resourceIds; //拥有的资源
     private Boolean available = Boolean.FALSE; //是否可用,如果不可用将不会添加给用户
 
+    private List<Integer> array;
     public Role() {
     }
 
@@ -96,7 +97,15 @@ public class Role implements Serializable {
         this.available = available;
     }
 
-    @Override
+    public List<Integer> getArray() {
+		return array;
+	}
+
+	public void setArray(List<Integer> array) {
+		this.array = array;
+	}
+
+	@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

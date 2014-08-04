@@ -31,7 +31,8 @@ public class FormFilterLoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String errorClassName = (String)req.getAttribute("shiroLoginFailure");
-
+        System.out.println(req.getParameter("username"));
+        System.out.println(req.getParameter("password"));
         if(UnknownAccountException.class.getName().equals(errorClassName)) {
             req.setAttribute("error", "用户名/密码错误");
         } else if(IncorrectCredentialsException.class.getName().equals(errorClassName)) {

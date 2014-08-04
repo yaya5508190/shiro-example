@@ -14,6 +14,12 @@ import java.util.Arrays;
  */
 public class PermissionTest extends BaseTest {
 
+	@Test
+	public void myTest(){
+		login("classpath:shiro-permission.ini", "yin", "123");
+		Assert.assertTrue(subject().isPermitted("123:system:user:create"));
+		Assert.assertTrue(subject().hasRole("myRole"));
+	}
     @Test
     public void testIsPermitted() {
         login("classpath:shiro-permission.ini", "zhang", "123");

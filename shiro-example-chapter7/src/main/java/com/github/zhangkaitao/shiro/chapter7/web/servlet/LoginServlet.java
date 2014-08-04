@@ -29,12 +29,13 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String error = null;
+        /*String error = null;
+        System.out.println(req.getAttribute("shiroLoginFailure"));
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        token.setRememberMe(true);
+        token.setRememberMe(false);
         try {
             subject.login(token);
         } catch (UnknownAccountException e) {
@@ -45,12 +46,23 @@ public class LoginServlet extends HttpServlet {
             //其他错误，比如锁定，如果想单独处理请单独catch处理
             error = "其他错误：" + e.getMessage();
         }
-
         if(error != null) {//出错了，返回登录页面
             req.setAttribute("error", error);
             req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
         } else {//登录成功
             req.getRequestDispatcher("/WEB-INF/jsp/loginSuccess.jsp").forward(req, resp);
+        }*/
+    	String errorClassName = (String)req.getAttribute("shiroLoginFailure");
+        System.out.println(req.getParameter("username"));
+        System.out.println(req.getParameter("password"));
+        if(UnknownAccountException.class.getName().equals(errorClassName)) {
+            req.setAttribute("error", "用户名/密码错误");
+        } else if(IncorrectCredentialsException.class.getName().equals(errorClassName)) {
+            req.setAttribute("error", "用户名/密码错误");
+        } else if(errorClassName != null) {
+            req.setAttribute("error", "未知错误：" + errorClassName);
         }
+
+        req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);
     }
 }

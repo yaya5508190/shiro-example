@@ -2,6 +2,7 @@ package com.github.zhangkaitao.shiro.chapter13.dao;
 
 import com.github.zhangkaitao.shiro.chapter13.entity.User;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,15 +20,15 @@ import java.util.Set;
  * <p>Version: 1.0
  */
 public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
-
+    
     public User createUser(final User user) {
-        final String sql = "insert into sys_users(username, password, salt, locked) values(?,?,?, ?)";
+        final String sql = "insert into sys_users(id,username, password, salt, locked) values(seq_testshiro.nextval,?,?,?,?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         getJdbcTemplate().update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement psst = connection.prepareStatement(sql, new String[]{"id"});
+                PreparedStatement psst = connection.prepareStatement(sql, new String[] { "id" });
                 psst.setString(1, user.getUsername());
                 psst.setString(2, user.getPassword());
                 psst.setString(3, user.getSalt());
@@ -58,7 +59,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
         String sql = "insert into sys_users_roles(user_id, role_id) values(?,?)";
         for(Long roleId : roleIds) {
             if(!exists(userId, roleId)) {
-                getJdbcTemplate().update(sql, userId, roleId);
+            	getJdbcTemplate().update(sql, userId, roleId);
             }
         }
     }
@@ -71,7 +72,7 @@ public class UserDaoImpl extends JdbcDaoSupport implements UserDao {
         String sql = "delete from sys_users_roles where user_id=? and role_id=?";
         for(Long roleId : roleIds) {
             if(exists(userId, roleId)) {
-                getJdbcTemplate().update(sql, userId, roleId);
+            	getJdbcTemplate().update(sql, userId, roleId);
             }
         }
     }

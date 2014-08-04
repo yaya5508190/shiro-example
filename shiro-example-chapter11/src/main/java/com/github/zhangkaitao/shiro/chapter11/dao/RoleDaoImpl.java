@@ -20,7 +20,7 @@ public class RoleDaoImpl implements RoleDao {
     private JdbcTemplate jdbcTemplate = JdbcTemplateUtils.jdbcTemplate();
 
     public Role createRole(final Role Role) {
-        final String sql = "insert into sys_roles(role, description, available) values(?,?,?)";
+        final String sql = "insert into sys_roles(id,role, description, available) values(seq_testshiro.nextval,?,?,?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {

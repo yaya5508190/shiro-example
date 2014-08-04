@@ -32,6 +32,7 @@
         <div class="form-group">
             <form:label path="resourceIds">拥有的资源列表：</form:label>
             <form:hidden path="resourceIds"/>
+            <form:hidden path="array" value='1,2,3,4,5'/>
             <input type="text" id="resourceName" name="resourceName" value="${zhangfn:resourceNames(role.resourceIds)}" readonly>
             <a id="menuBtn" href="#">选择</a>
         </div>

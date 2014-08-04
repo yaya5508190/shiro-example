@@ -110,6 +110,7 @@
             <map>
                 <entry key="casuser" value="Mellon"/>
                 <entry key="zhang" value="123"/>
+                <entry key="yx" value="1"/>
             </map>
         </property>
     </bean>

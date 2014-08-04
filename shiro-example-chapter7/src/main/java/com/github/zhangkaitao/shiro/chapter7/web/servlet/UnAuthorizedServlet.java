@@ -20,6 +20,7 @@ public class UnAuthorizedServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    	Subject subject = SecurityUtils.getSubject();
         req.getRequestDispatcher("/WEB-INF/jsp/unauthorized.jsp").forward(req, resp);
     }
 

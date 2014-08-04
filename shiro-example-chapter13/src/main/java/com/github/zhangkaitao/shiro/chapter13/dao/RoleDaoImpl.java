@@ -1,6 +1,7 @@
 package com.github.zhangkaitao.shiro.chapter13.dao;
 
 import com.github.zhangkaitao.shiro.chapter13.entity.Role;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -16,14 +17,16 @@ import java.sql.SQLException;
  */
 public class RoleDaoImpl extends JdbcDaoSupport implements RoleDao {
 
+    private JdbcTemplate jdbcTemplate = getJdbcTemplate();
+
     public Role createRole(final Role Role) {
-        final String sql = "insert into sys_roles(role, description, available) values(?,?,?)";
+        final String sql = "insert into sys_roles(id,role, description, available) values(seq_testshiro.nextval,?,?,?)";
 
         GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
-        getJdbcTemplate().update(new PreparedStatementCreator() {
+        jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement psst = connection.prepareStatement(sql, new String[]{"id"});
+                PreparedStatement psst = connection.prepareStatement(sql, new String[] { "id" });
                 psst.setString(1, Role.getRole());
                 psst.setString(2, Role.getDescription());
                 psst.setBoolean(3, Role.getAvailable());
@@ -38,10 +41,10 @@ public class RoleDaoImpl extends JdbcDaoSupport implements RoleDao {
     public void deleteRole(Long roleId) {
         //首先把和role关联的相关表数据删掉
         String sql = "delete from sys_users_roles where role_id=?";
-        getJdbcTemplate().update(sql, roleId);
+        jdbcTemplate.update(sql, roleId);
 
         sql = "delete from sys_roles where id=?";
-        getJdbcTemplate().update(sql, roleId);
+        jdbcTemplate.update(sql, roleId);
     }
 
     @Override
@@ -52,7 +55,7 @@ public class RoleDaoImpl extends JdbcDaoSupport implements RoleDao {
         String sql = "insert into sys_roles_permissions(role_id, permission_id) values(?,?)";
         for(Long permissionId : permissionIds) {
             if(!exists(roleId, permissionId)) {
-                getJdbcTemplate().update(sql, roleId, permissionId);
+                jdbcTemplate.update(sql, roleId, permissionId);
             }
         }
     }
@@ -66,14 +69,14 @@ public class RoleDaoImpl extends JdbcDaoSupport implements RoleDao {
         String sql = "delete from sys_roles_permissions where role_id=? and permission_id=?";
         for(Long permissionId : permissionIds) {
             if(exists(roleId, permissionId)) {
-                getJdbcTemplate().update(sql, roleId, permissionId);
+                jdbcTemplate.update(sql, roleId, permissionId);
             }
         }
     }
 
     private boolean exists(Long roleId, Long permissionId) {
         String sql = "select count(1) from sys_roles_permissions where role_id=? and permission_id=?";
-        return getJdbcTemplate().queryForObject(sql, Integer.class, roleId, permissionId) != 0;
+        return jdbcTemplate.queryForObject(sql, Integer.class, roleId, permissionId) != 0;
     }
 
 }

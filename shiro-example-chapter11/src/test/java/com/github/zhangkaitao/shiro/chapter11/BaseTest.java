@@ -5,7 +5,10 @@ import com.github.zhangkaitao.shiro.chapter11.entity.Permission;
 import com.github.zhangkaitao.shiro.chapter11.entity.Role;
 import com.github.zhangkaitao.shiro.chapter11.entity.User;
 import com.github.zhangkaitao.shiro.chapter11.service.*;
+import com.github.zhangkaitao.shiro.chapter11.token.ObjectToken;
+
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.subject.Subject;
@@ -13,6 +16,7 @@ import org.apache.shiro.util.Factory;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  * <p>User: Zhang Kaitao
@@ -33,6 +37,7 @@ public abstract class BaseTest {
     protected Role r1;
     protected Role r2;
     protected User u1;
+    protected User u2;
 
     @Before
     public void setUp() {
@@ -66,9 +71,13 @@ public abstract class BaseTest {
         //4、新增用户
         u1 = new User("zhang", password);
         userService.createUser(u1);
+        
+        u2 = new User("yx", "1");
+        userService.createUser(u2);
+        
         //5、关联用户-角色
         userService.correlationRoles(u1.getId(), r1.getId());
-
+        userService.correlationRoles(u2.getId(), r1.getId());
         //1、获取SecurityManager工厂，此处使用Ini配置文件初始化SecurityManager
         Factory<org.apache.shiro.mgt.SecurityManager> factory =
                 new IniSecurityManagerFactory("classpath:shiro.ini");
@@ -78,7 +87,7 @@ public abstract class BaseTest {
         SecurityUtils.setSecurityManager(securityManager);
 
     }
-
+    
     @After
     public void tearDown() throws Exception {
         ThreadContext.unbindSubject();//退出时请解除绑定Subject到线程 否则对下次测试造成影响
@@ -88,7 +97,7 @@ public abstract class BaseTest {
 
         //3、得到Subject及创建用户名/密码身份验证Token（即用户身份/凭证）
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+        ObjectToken token = new ObjectToken(new User(username, password), password);
 
         subject.login(token);
     }

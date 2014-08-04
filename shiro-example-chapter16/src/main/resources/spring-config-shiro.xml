@@ -117,7 +117,8 @@
                 /login = authc
                 /logout = logout
                 /authenticated = authc
-                /** = user,sysUser
+                / = authc,sysUser
+                /** = user
             </value>
         </property>
     </bean>

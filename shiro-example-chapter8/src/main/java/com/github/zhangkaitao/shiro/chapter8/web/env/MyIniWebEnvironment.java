@@ -32,6 +32,7 @@ public class MyIniWebEnvironment extends IniWebEnvironment {
         //4、注册URL-Filter的映射关系
         filterChainManager.addToChain("/login.jsp", "authc");
         filterChainManager.addToChain("/unauthorized.jsp", "anon");
+        filterChainManager.addToChain("/logout", "logout");
         filterChainManager.addToChain("/**", "authc");
         filterChainManager.addToChain("/**", "roles", "admin");
 

@@ -27,8 +27,8 @@
         <property name="authenticationCacheName" value="authenticationCache"/>
         <property name="authorizationCachingEnabled" value="true"/>
         <property name="authorizationCacheName" value="authorizationCache"/>
-        <property name="casServerUrlPrefix" value="https://localhost:8443/chapter14-server"/>
-        <property name="casService" value="https://localhost:9443/chapter14-client/cas"/>
+        <property name="casServerUrlPrefix" value="https://yaya5508190.oicp.net:57913/chapter15-server"/>
+        <property name="casService" value="http://alucard.wicp.net:34423/shiro-example-chapter15-client/cas"/>
     </bean>
 
     <!--<bean id="casRealm" class="org.apache.shiro.cas.CasRealm">-->
@@ -113,15 +113,19 @@
     <bean id="casFilter" class="org.apache.shiro.cas.CasFilter">
         <property name="failureUrl" value="/casFailure.jsp"/>
     </bean>
+    <bean id="logoutFilter" class="org.apache.shiro.web.filter.authc.LogoutFilter">
+        <property name="redirectUrl" value="https://yaya5508190.oicp.net:59772/chapter15-server/logout"/>
+    </bean>
 
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="https://localhost:8443/chapter14-server/login?service=https://localhost:9443/chapter14-client/cas"/>
+        <property name="loginUrl" value="https://yaya5508190.oicp.net:57913/chapter15-server/login?service=http://alucard.wicp.net:34423/shiro-example-chapter15-client/cas"/>
         <property name="successUrl" value="/"/>
         <property name="filters">
             <util:map>
                 <entry key="cas" value-ref="casFilter"/>
+                <entry key="logout" value-ref="logoutFilter"/>
             </util:map>
         </property>
         <property name="filterChainDefinitions">
